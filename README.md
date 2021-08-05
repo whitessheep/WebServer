@@ -1,6 +1,7 @@
 # Web Server
 本项目基于Linux采用C++11实现的轻量级Web服务器，并搭配日志记录，定时处理用户连接等功能，根据测试可见轻易达到上万的QPS
 
+
 ## Technical points
 * 使用IO复用技术和线程池以及非阻塞的IO实现的Reactor模式的Web服务器
 * 使用Epoll边沿触发的IO多路复用技术高效的处理事件
@@ -32,11 +33,14 @@
 
 ![shortTest](root/webserver.png)
 
-*可以看到可以轻松达到上百万的QPS
+* QPS： 1000000+
+
+## TODO
+* 数据库连接
 
 ## 致谢
 	《Linux多线程服务端编程》陈硕
-
+	[@RownH](https://github.com/RownH)
 
 	
 
