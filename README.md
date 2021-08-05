@@ -30,6 +30,9 @@
 * 单机测试
 * 4个工作线程
 
+![shortTest](root/webserver.png)
+
+*可以看到可以轻松达到上百万的QPS
 
 ## 致谢
 	《Linux多线程服务端编程》陈硕
