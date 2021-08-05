@@ -31,7 +31,7 @@
 * 4个工作线程
 
 
-##致谢
+## 致谢
 	《Linux多线程服务端编程》陈硕
 
 	[@imarvinle](https://github.com/imarvinle/WebServer)
