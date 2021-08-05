@@ -40,7 +40,6 @@
 
 ## 致谢
 	《Linux多线程服务端编程》陈硕
-	[@RownH](https://github.com/RownH)
 
 	
 
