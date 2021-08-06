@@ -11,11 +11,11 @@ namespace
 {
 off_t logRollSize = 500*1000*1000;
 
-std::unique_ptr<AsyncLogging> log;
+std::unique_ptr<AsyncLogging> asynclog;
 
 void asyncOutput(const char* msg, int len)
 {
-  log->append(msg, len);
+  asynclog->append(msg, len);
 }
 }
 
@@ -30,8 +30,8 @@ WebServer::WebServer(const InetAddress& listenAddr, int numThreads, int timelimi
 {
 	Logger::setLogLevel(logLevel);
 	if (saveLog) {
-		log.reset(new AsyncLogging(name_, "log/", logRollSize));
-		log->start();
+		asynclog.reset(new AsyncLogging(name_, "log/", logRollSize));
+		asynclog->start();
 		Logger::setOutput(asyncOutput);
 	}
 	threadpool_.setMaxQueueSize(1024);
