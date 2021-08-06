@@ -19,9 +19,9 @@ const char* strerror_tl(int savedErrno)
 
 Logger::LogLevel initLogLevel()
 {
-	if (::getenv("LOG_TRACE"))
+	if (getenv("LOG_TRACE"))
 		return Logger::TRACE;
-	else if (::getenv("LOG_DEBUG"))
+	else if (getenv("LOG_DEBUG"))
 		return Logger::DEBUG;
 	else
 		return Logger::INFO;

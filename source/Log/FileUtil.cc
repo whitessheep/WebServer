@@ -8,17 +8,17 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-AppendFile::AppendFile(StringArg filename)
-	: fp_(::fopen(filename.c_str(), "ae")),  // 'e' for O_CLOEXEC
+AppendFile::AppendFile(const std::string& filename)
+	: fp_(fopen(filename.c_str(), "ae")),  // 'e' for O_CLOEXEC
 	writtenBytes_(0)
 {
 	assert(fp_);
-	::setbuffer(fp_, buffer_, sizeof buffer_);
+	setbuffer(fp_, buffer_, sizeof buffer_);
 }
 
 AppendFile::~AppendFile()
 {
-	::fclose(fp_);
+	fclose(fp_);
 }
 
 void AppendFile::append(const char* logline, const size_t len)
@@ -38,7 +38,7 @@ void AppendFile::append(const char* logline, const size_t len)
 			break;
 		}
 		n += x;
-		remain = len - n; // remain -= x
+		remain = len - n; 
 	}
 
 	writtenBytes_ += len;
@@ -46,11 +46,11 @@ void AppendFile::append(const char* logline, const size_t len)
 
 void AppendFile::flush()
 {
-	::fflush(fp_);
+	fflush(fp_);
 }
 
 size_t AppendFile::write(const char* logline, size_t len)
 {
-	return ::fwrite_unlocked(logline, 1, len, fp_);
+	return fwrite_unlocked(logline, 1, len, fp_);
 }
 

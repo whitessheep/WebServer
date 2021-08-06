@@ -25,7 +25,6 @@ LogFile::LogFile(const string& basename,
 	lastRoll_(0),
 	lastFlush_(0)
 {
-	assert(basename.find('/') == string::npos);
 	rollFile();
 }
 
@@ -68,7 +67,8 @@ void LogFile::append(const char* logline, int len)
 bool LogFile::rollFile()
 {
 	time_t now = 0;
-	string filename = getLogFileName(basename_, &now);
+	string filename = path_ + basename_;
+	filename = getLogFileName(filename, &now);
 	time_t start = now / kRollPerSeconds_ * kRollPerSeconds_;
 
 	if (now > lastRoll_)

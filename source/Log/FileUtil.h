@@ -5,13 +5,13 @@
 #define WEBSERVER_FILEUTIL_H
 
 #include "base/noncopyable.h"
-#include "base/StringPiece.h"
 #include <sys/types.h>  // for off_t
+#include <string>
 
 class AppendFile : noncopyable
 {
 public:
-	explicit AppendFile(StringArg filename);
+	explicit AppendFile(const std::string& filename);
 
 	~AppendFile();
 
