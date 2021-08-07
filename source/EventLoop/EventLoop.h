@@ -6,6 +6,7 @@
 #define WEBSERVER_EVENTLOOP_H
 
 #include "base/noncopyable.h"
+#include "base/Mutex.h"
 
 #include <atomic>
 #include <vector>
@@ -41,6 +42,7 @@ public:
 	void removeEvents(Socket* socket);
 	bool checkWriting(const Socket& socket);
 
+	void queueInLoop(EventCallback cb);
 private:
 	static const int kInitEventListSize = 1024;
 	typedef std::vector<struct epoll_event> EventList;
@@ -52,6 +54,7 @@ private:
 
 	int  waitEvents();
 	void handleEvent(int numEvents);
+	void doPendingFunctors();	
 
 	bool looping_;
 	std::atomic<bool> quit_;
@@ -65,6 +68,9 @@ private:
 	ConnectionCallback closeCallback_;
 	ConnectionCallback errorCallback_;
 	EventCallback TimerCallback_;
+
+	MutexLock mutex_;
+	std::vector<EventCallback> pendingFunctors_ ;
 };
 
 #endif //WEBSERVER_EVENTLOOP_H

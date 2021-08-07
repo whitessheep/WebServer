@@ -2,6 +2,8 @@
 #include "HttpConn/HttpConnection.h"
 #include "Log/Logging.h"
 
+#include "sys/time.h"
+
 Entry::~Entry()
 {
   HttpConnectionPtr conn = weakConn_.lock();
@@ -12,10 +14,11 @@ Entry::~Entry()
   }
 }
 
-TimerManager::TimerManager(int timelimit)
-	:connectionBuckets_(timelimit) 
-{ connectionBuckets_.resize(timelimit); }                                                                                                                                                                      
 
+TimerManager::TimerManager(int timelimit)
+	:connectionBuckets_(timelimit),
+	 expiredTime_(getTime() + interval)
+{ connectionBuckets_.resize(timelimit); }
 
 void TimerManager::addTimer(const std::shared_ptr<HttpConnection>& conn) {
 	EntryPtr entry(new Entry(conn));
@@ -33,8 +36,12 @@ void TimerManager::extendTime(const std::shared_ptr<HttpConnection>& conn) {
 }
 
 void TimerManager::handleEvent() {
-	connectionBuckets_.push_back(Bucket());
-	// dumpConnectionBuckets();
+	size_t now = getTime();
+	if (now >= expiredTime_) {
+		connectionBuckets_.push_back(Bucket());
+		// dumpConnectionBuckets();
+		expiredTime_ = now + interval;
+	}
 }
 
 void TimerManager::dumpConnectionBuckets() const    
@@ -53,4 +60,10 @@ void TimerManager::dumpConnectionBuckets() const
 		}
 		puts("");
 	}
+}
+
+size_t TimerManager::getTime() {
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	return (now.tv_sec  * 1000000) + now.tv_usec;
 }

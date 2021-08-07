@@ -47,8 +47,11 @@ private:
   	typedef boost::circular_buffer<Bucket> WeakConnectionList;
 
 	void dumpConnectionBuckets() const;    // for DEBUG
+	static size_t getTime() ;
+	static size_t const interval = 1000000;
 
   	WeakConnectionList connectionBuckets_;
+	size_t expiredTime_;
 };
 
 #endif //WEBSERVER_TIMER_H

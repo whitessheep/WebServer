@@ -79,6 +79,11 @@ int EventLoop::waitEvents() {
 	return numEvents;
 }
 
+void EventLoop::queueInLoop(EventCallback cb) {
+	MutexLockGuard lock(mutex_);
+	pendingFunctors_.push_back(std::move(cb));
+}
+
 void EventLoop::handleEvent(int numEvents) {
 	for (int i = 0; i < numEvents; ++i) {
 		auto it = static_cast<Socket*>(events_[i].data.ptr);
@@ -111,8 +116,23 @@ void EventLoop::handleEvent(int numEvents) {
 			}
 		}
 	}
+	doPendingFunctors();
 	if (TimerCallback_) {
 		TimerCallback_();
+	}
+}
+
+void EventLoop::doPendingFunctors()
+{
+	std::vector<EventCallback> functors;
+
+	{
+		MutexLockGuard lock(mutex_);
+		functors.swap(pendingFunctors_);
+	}
+
+	for (const EventCallback& functor : functors) {
+		functor();
 	}
 }
 

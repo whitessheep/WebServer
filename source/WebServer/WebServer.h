@@ -41,6 +41,7 @@ private:
 	void onClose(int fd);
 
 	void removeConnection(int fd);
+	void removeConnection_r(int fd);      
 	
 	const std::string name_;
 	const std::string ipPort_;

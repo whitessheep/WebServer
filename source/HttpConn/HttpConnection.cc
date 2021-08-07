@@ -40,7 +40,7 @@ void HttpConnection::handleRead() {
 		n = inputBuffer_.readFd(socket_->fd(), &saveErrno);
 		if (n <= 0) {
 			if (n == 0) {
-				handleClose();
+				connectionDestroyed();
 				return;
 			}
 			else if (saveErrno == EAGAIN) {
@@ -48,7 +48,7 @@ void HttpConnection::handleRead() {
 			}
 			else {
 				LOG_WARN << "HttpConnection::handleRead unknown error fd = " << socket_->fd();
-				handleClose();
+				connectionDestroyed();
 				return;
 			}
 		}
@@ -102,16 +102,15 @@ void HttpConnection::handleWrite() {
 		}
 		else {
 			LOG_WARN << "HttpConnection::handleWrite unknown error fd = " << socket_->fd();
-			handleClose();
+			connectionDestroyed();
 		}
 	}
 }
 
 void HttpConnection::handleClose() {
-	LOG_INFO << "HttpConnection::handleClose fd = " << socket_->fd();
+	LOG_INFO << "HttpConnection::connection close fd = " << socket_->fd();
 	loop_->removeEvents(&*socket_);
 	setState(kDisconnected);
-	closeCallback_(socket_->fd());
 }
 
 void HttpConnection::shutdown() {
@@ -124,14 +123,16 @@ void HttpConnection::shutdown() {
 }
 
 void HttpConnection::connectionDestroyed() {
-	LOG_INFO << "HttpConnection::connectionDestroyed fd = " << socket_->fd();
+	LOG_INFO << "HttpConnection::connection close in thread fd = " << socket_->fd();
 	loop_->removeEvents(&*socket_);
 	setState(kDisconnected);
+	closeCallback_(socket_->fd());
 }
 
 void HttpConnection::send(Buffer* buf) {
-	if (state_ != kConnected) {
+	if (state_ == kDisconnected) {
 		loop_->resetReading(&*socket_);
+		LOG_WARN << "disconnected, give up writing";
 		return;
 	}
 	ssize_t nwrote = 0;

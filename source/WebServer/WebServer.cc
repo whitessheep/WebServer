@@ -76,7 +76,7 @@ void WebServer::newConnection() {
 		}
 
 		HttpConnection::HttpConnectionPtr conn(new HttpConnection(&loop_, connfd));
-		conn->setCloseCallback(std::bind(&WebServer::removeConnection, this, std::placeholders::_1));   
+		conn->setCloseCallback(std::bind(&WebServer::removeConnection_r, this, std::placeholders::_1));   
 		connections_[connfd] = conn;
 		timermanager_.addTimer(conn);
 		conn->connectEstablished();
@@ -105,10 +105,15 @@ void WebServer::onClose(int fd) {
 	if (it != connections_.end()) {
 		it->second->handleClose();
 	}
+	removeConnection(fd);
 }
 
 void WebServer::removeConnection(int fd) {
-	// assert(connections_.find(fd) != connections_.end());
-	MutexLockGuard lock(mutex_);
-	connections_.erase(fd);
+	size_t n = connections_.erase(fd);
+	(void)n;
+	assert(n == 1);
+}
+
+void WebServer::removeConnection_r(int fd) {
+	loop_.queueInLoop(std::bind(&WebServer::removeConnection, this, fd));
 }
