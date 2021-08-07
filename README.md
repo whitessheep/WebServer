@@ -28,7 +28,6 @@
 * CPU： 4核
 
 * 使用WebBench，模仿100、1000、10000个客户，测试60s
-* 单机测试
 * 4个工作线程
 
 ![shortTest](root/webserver.png)
