@@ -20,7 +20,7 @@
 	make
 
 ## Usage
-	./webserver [-t 线程数] [-p 端口] [-l 日志等级] [-s 时间限制] [r 保存日志] 
+	./webserver [-t 线程数] [-p 端口] [-l 日志等级] [-s 时间限制] [-r 保存日志] 
 
 ## 压力测试
 * OS： CentOS 7
