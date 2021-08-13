@@ -18,6 +18,8 @@
 
 ## Build
 	make
+项目中有boost库依赖， make前请确保安装了boost库开发工具
+yum -y install boost-devel
 
 ## Usage
 	./webserver [-t 线程数] [-p 端口] [-l 日志等级] [-s 时间限制] [-r 保存日志] 
