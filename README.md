@@ -30,7 +30,7 @@
 * 使用WebBench，模仿100、1000、10000个客户，测试60s
 * 4个工作线程
 
-![test](root/webserver (2).png)
+![test](root/webserver.png)
 
 * QPS： 1000000+
 
