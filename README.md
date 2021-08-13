@@ -12,7 +12,8 @@
 * 缓冲区底层采用标准库容器，实现能动态增长的缓冲区
 * 使用状态机解析HTTP请求，支持长短连接
 
-具体请看[整体设计](整体设计.md)
+WebServer整体框架和设计思路请看[整体设计](整体设计.md)
+
 ## 环境
 * OS: CentOS 7
 * Complier: g++ 4.8
@@ -20,6 +21,7 @@
 ## Build
 	make
 项目中有boost库依赖， make前请确保安装了boost库开发工具
+
 yum -y install boost-devel
 
 ## Usage
