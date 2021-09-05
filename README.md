@@ -16,7 +16,7 @@ WebServer整体框架和设计思路请看[整体设计](整体设计.md)
 
 ## 环境
 * OS: CentOS 7
-* Complier: g++ 4.8
+* Compiler: g++ 4.8
 
 ## Build
 	make
